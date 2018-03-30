@@ -1,0 +1,46 @@
+{
+  "name": "master-mind",
+  "version": "1.0.0",
+  "description": "Master Mind Electron App",
+  "author": "Jan Christian Refsgaard",
+  "repository": "https://github.com/jancr/MasterMind.git",
+  "license": "MIT",
+  "main": "main.js",
+  "devDependencies": {
+    "electron": "^1.4.1",
+    "electron-builder": "^14.5.3"
+  },
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "game-grid": "^0.0.9",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.12.9"
+  },
+  "scripts": {
+    "postinstall": "install-app-deps",
+    "start": "electron .",
+    "dist": "build"
+  },
+  "build": {
+    "appId": "master-mind",
+    "directories": {
+      "buildResources": "../../assets",
+      "output": "../../dist"
+    },
+    "extraResources": {
+      "from": "../src/bin/dist/",
+      "to": "api/bin/dist/",
+      "filter": [
+        "**/*"
+      ]
+    },
+    "mac": {
+      "category": "games"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    }
+  }
+}
