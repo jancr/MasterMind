@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Master Mind</title>
-    <!-- <script>window.$ = window.jQuery = require('jquery');</script> -->
+
+    <!-- JQuery -->
+    <script>window.$ = window.jQuery = require('jquery');</script>
+    
+    <!-- bootstrap -->
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+
 </head>
 <body>
-    <p>Hellow Electron<p>
     <canvas id="bord" width="500" height="1000" style="border:1px solid #000000;">
     </canvas>
+    
     <div id="debug_info"></div>
 </body>
 <script type="text/javascript" src="master_mind.js"></script>

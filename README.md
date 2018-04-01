@@ -24,11 +24,17 @@ bash dependencies.sh
         * `dotnet publish -r linux-x64 --output bin/dist/linux`
 
 
-
-
 ## Licence ##
 All source code is licenced under the [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 Images shamelessly stolen from 
 ["https://github.com/robwil/Mastermind.Net"](https://github.com/robwil/Mastermind.Net), where I could not find a licence file.
 
+## Inspiration ##
+All c# was written with very little outside inspiration.
+Front end inspiration:
+* grid: 
+	- http://jsfiddle.net/h2yJn/66/
+* electron:
+	- https://scotch.io/@rui/how-to-build-a-cross-platform-desktop-application-with-electron-and-net-core
+	  thugh I dropped the react part, to not overwhelm myself

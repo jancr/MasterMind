@@ -1,117 +1,192 @@
-'use strict';
+':use strict';
 
-const $ = require('jquery')
+// const $ = require('jquery')
 
 ////////////////////////////////////////////////////////////////////////////////
 // MasterMindBord
 ////////////////////////////////////////////////////////////////////////////////
 // constructor
 function MasterMindBord() {
-	this.bord = null;
-	this.pegs = null;
-	this.game_status = null;
-	this.n_guesses = null;
+    this.bord = null;
+    this.pegs = null;
+    this.game_status = null;
+    this.guess_vector = [-1, -1, -1, -1];
+    this.n_guesses = null;
 
-    this.canvas = $("#bord");
-	this.debug_info = $("#debug_info");
-	this.n_rows = 10;
-	this.n_cols = 4;
+    this.canvas = $("#bord")[0];
+    this.debug_info = $("#debug_info");
+    this.n_rows = 10;
+    this.n_cols = 4;
+    this.context = this.canvas.getContext("2d");
+    this.n_colors = 6;
+    this.padding = 10
 }
-	
+    
 // pseudo constructor
 MasterMindBord.prototype.newGame = function(n_rows, n_cols) {
-	if (typeof(n_rows) !== 'undefined') {
-		this.n_rows = n_rows;
-	} if (typeof(n_cols) !== 'undefined') {
-		this.n_cols = n_cols;
-	}
-	this.n_guesses = 0;
-	$.getJSON("http://localhost:5000/api/mm/new-game", 
-			  $.proxy(this.update, this));
+    if (typeof(n_rows) !== 'undefined') {
+        this.n_rows = n_rows;
+    } if (typeof(n_cols) !== 'undefined') {
+        this.n_cols = n_cols;
+    }
+    this.n_guesses = 0;
+    
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    $.getJSON("http://localhost:5000/api/mm/new-game", 
+              $.proxy(this.update, this));
 }
 
 MasterMindBord.prototype.update = function(response) {
-	this.bord = response.bord;
-	this.pegs = response.pegs;
-	this.game_status = response.game_status;
-	this.debug_info = response.bord;
-	this._drawBord();
+    this.bord = response.bord;
+    this.pegs = response.pegs;
+    this.game_status = response.game_status;
+    // this.debug_info = response.bord;
+    this._drawBord();
 }
 
-MasterMindBord.prototype.guess =  function() {
-	// TODO: get guess from canvas!!!
-	let guess = "1,2,3,4";
-	$.getJSON("http://localhost:5000/api/mm/guess/" + guess, 
-			  $.proxy(this.update, this));
+MasterMindBord.prototype.guess = function() {
+    $.getJSON("http://localhost:5000/api/mm/guess/" + this.guess_vector.join(), 
+              $.proxy(this.update, this));
+    this.guess_vector = [-1, -1, -1, -1];
+    this.n_guesses++;
 }
 
 // private helper methods
 MasterMindBord.prototype._drawBord = function drawBoard(){
-	//grid width and height
-	let bord_width = 500;
-	let bord_height = 1000;
-	//padding around grid
-	let padding = 10;
-	//size of canvas
-	let canvas_width = bord_width + (padding * 2) + 1;
-	let canvas_height = bord_height + (padding * 2) + 1;
+    //grid width and height
+    let bord_width = 500;
+    let bord_height = 1000;
+    //padding around grid
+    let padding = this.padding
+    //size of canvas
+    let canvas_width = bord_width + (padding * 2) + 1;
+    let canvas_height = bord_height + (padding * 2) + 1;
 
-	$('#bord').attr({width: canvas_width, height: canvas_height});
+    $("#bord").attr({width: canvas_width, height: canvas_height});
 
-	let x_step = bord_width / this.n_cols;
-	let y_step = bord_height / this.n_rows;
+    this.x_step =  bord_width / (this.n_cols + 1);
+    this.y_step = bord_height / this.n_rows;
 
-	let context = this.canvas.get(0).getContext("2d");
-	for (let x = 0; x <= bord_width; x += x_step) {
-		context.moveTo(0.5 + x + padding, padding);
-		context.lineTo(0.5 + x + padding, bord_height + padding);
-	}
+    for (let x = 0; x <= bord_width; x += this.x_step) {
+        this.context.moveTo(0.5 + x + padding, padding);
+        this.context.lineTo(0.5 + x + padding, bord_height + padding);
+    }
 
-	for (let y = 0; y <= bord_height; y += y_step) {
-		context.moveTo(padding, 0.5 + y + padding);
-		context.lineTo(bord_width + padding, 0.5 + y + padding);
-	}
+    for (let y = 0; y <= bord_height; y += this.y_step) {
+        this.context.moveTo(padding, 0.5 + y + padding);
+        this.context.lineTo(bord_width + padding, 0.5 + y + padding);
+    }
 
-	context.strokeStyle = "black";
-	context.stroke();
+    this.context.strokeStyle = "black";
+    this.context.stroke();
 
-	function insertImage(i_col, i_row, n_image) {
-		let base_image = new Image();
-		base_image.src = 'static/img/shadow_ball_' + n_image + '.png';
-		base_image.onload = function(){
-			// TODO: is this this shadowed???
-			// TODO: is this this shadowed???
-			console.log(this);
-			// calc x,y pos
-			let x = padding + i_col * x_step;
-			let y = padding + (this.n_rows - i_row) * y_step;
+    let self = this;
 
-			context.drawImage(base_image, x, y, x_step, y_step) 
-		}
-	}
-	for (let i_row = 0; i_row < this.n_rows; i_row++) {
-		if (i_row < this.n_guesses) {
-
-			for (let i_col = 0; i_col < this.n_cols; i_col++) {
-				// TODO: do math
-				// TODO, fix guess so you have stuff to draw
-				// TODO: get n_image from guess or bord
-				insertImage(i_col, i_row, this.bord[i_row][i_col]);
-				// TODO: pegs??
-			}
-		}
-	}
+    for (let i_row = 0; i_row < this.n_rows; i_row++) {
+        if (this.bord[i_row][0] != -1) {
+            // guess
+            for (let i_col = 0; i_col < this.n_cols; i_col++) {
+                this.insertBall(i_col, i_row, this.bord[i_row][i_col]);
+            }
+            
+            // pegs
+            let black_pegs = this.pegs[i_row][0];
+            let white_pegs = this.pegs[i_row][1];
+            for (let i = 0; i < black_pegs; i++) {
+                this.insertPeg(i_row, i, 'black');
+            }
+            for (let i = 0; i < white_pegs; i++) {
+                this.insertPeg(i_row, i+black_pegs, 'white');
+            }
+            for (let i = 0; i < (4 - white_pegs - black_pegs); i++) {
+                this.insertPeg(i_row, i + black_pegs + white_pegs, 'empty');
+            }
+        }
+    }
 }
 
+MasterMindBord.prototype.insertPeg = function(i_row, n, img_str) {
+    let base_image = new Image();
+    base_image.src = 'static/img/' + img_str + '_peg.png';
+    let x = this.padding + this.n_cols * this.x_step;
+    let y = this.padding + (this.n_rows - i_row - 1) * this.y_step;
+    if (2 <= n) {
+        y += this.y_step * 0.5
+    } if (n % 2 == 1) {
+        x += 0.5 * this.x_step 
+    }
+    let self = this;
+    base_image.onload = function(){
+        // image is 30x50, so we need to crop 10px from top and buttom
+        self.context.drawImage(base_image, 0, 10, 30, 30, x, y, 
+                               0.5 * self.x_step, 0.5 * self.y_step);
+    }
+}
+
+MasterMindBord.prototype.insertBall = function(i_col, i_row, n_image) {
+    let base_image = new Image();
+    base_image.src = 'static/img/shadow_ball_' + n_image + '.png';
+    let x = this.padding + i_col * this.x_step;
+    let y = this.padding + (this.n_rows - i_row - 1) * this.y_step;
+    this.context.clearRect(x+1, y+1, this.x_step-1, this.y_step-1);
+    self = this;
+    base_image.onload = function(){
+        self.context.drawImage(base_image, x, y, self.x_step, self.y_step) 
+    }
+}
+
+// create one instance of the bord class
+var masterMindBord = new MasterMindBord();
 
 ////////////////////////////////////////////////////////////////////////////////
 // events
 ////////////////////////////////////////////////////////////////////////////////
-// create one instance of the bord class
-var masterMindBord = new MasterMindBord();
+
+let canvas = $("#bord")[0];
+let context = masterMindBord.context;
+
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+    };
+}
+
+canvas.addEventListener('click', function draw(evt) {
+    var pos = getMousePos(canvas, evt);
+    let m = masterMindBord;
+    let padding = m.padding;
+    let i_col = Math.floor((pos.x - padding) / m.x_step);
+    if (i_col < m.n_cols) {
+        m.guess_vector[i_col] = (m.guess_vector[i_col] + 1) % m.n_colors
+        $("#debug_info").text(m.guess_vector);
+        m.insertBall(i_col, m.n_guesses, m.guess_vector[i_col]);
+    }
+}, false);
+
+document.addEventListener('keydown', function(event) {
+    let m = masterMindBord;
+    let col_1 = '1'.charCodeAt(0);
+    let col_4 = '4'.charCodeAt(0);
+    let col_i = event.keyCode;
+    if ((col_1 <= col_i) && (col_i <= col_4)) {
+        let i_col = col_i - col_1;
+        $("#debug_info").text(i_col);
+        m.guess_vector[i_col] = (m.guess_vector[i_col] + 1) % m.n_colors
+        $("#debug_info").text(m.guess_vector);
+        m.insertBall(i_col, m.n_guesses, m.guess_vector[i_col]);
+    }
+});
 
 $(document).ready(function() {
-	// I think this is inly called on load and refresh, not when events update
-	masterMindBord.newGame();
-	masterMindBord.guess();
+    // I think this is inly called on load and refresh, not when events update
+    masterMindBord.newGame();
+
+    // masterMindBord.guess_vector = [0, 0, 1, 1];
+    // masterMindBord.guess();
+    // masterMindBord.guess("3,3,4,4");
+    // masterMindBord.newGame();
+    // // masterMindBord.guess("3,3,4,4");
+    // // masterMindBord.guess("5,5,0,0");
 });        

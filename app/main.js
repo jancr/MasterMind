@@ -10,7 +10,7 @@ const url = require('url')
 let mainWindow
 
 function createWindow () {
-	mainWindow = new BrowserWindow({width: 800, height: 600})
+	mainWindow = new BrowserWindow({width: 1100, height: 550})
 
 	mainWindow.loadURL(url.format({
 		pathname: path.join(__dirname, 'index.html'),
@@ -63,7 +63,8 @@ function startApi() {
 	var mm_bin_path = path.join(__dirname, '..\\src\\bin\\dist\\win\\MasterMind.exe')
 	if (os.platform() === 'darwin') {
 		mm_bin_path = path.join(__dirname, '..//src//bin//dist//osx//MasterMind')
-	}
+	} 
+	// TODO: linux
 	apiProcess = proc(mm_bin_path)
 
 	apiProcess.stdout.on('data', (data) => {
