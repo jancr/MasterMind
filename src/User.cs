@@ -18,41 +18,43 @@ using System.IO;
 
 namespace MasterMind {
     class GameStat {
-        public string difficulity;
-        public int rounds;
-        public bool win;
+        // difficulity is defined as the number of colors
+        public int Difficulity { get; private set; }
+        public int Rouds { get; private set; }
+        public bool Win { get; private set; }
 
-        public GameStat(string gameDifficulity, int gameRounds, bool gameWin) {
-            difficulity = gameDifficulity;
-            rounds = gameRounds;
-            win = gameWin;
+        public GameStat(int difficulity, int rounds, bool win) {
+            Difficulity = difficulity;
+            Rounds = rounds;
+            Win = win;
         }
     }
 
     class UserStats {
-        public string name;
-        public List<GameStat> stats;
+        private string name;
+        private List<GameStat> stats;
         
         public UserStats(string userName) {
             name = userName;
-            stats = new List<GameStat>();
+            string file = getFilePath();
+            if (File.Exists(file)) {
+                Load();
+            } else {
+                stats = new List<GameStat>();
+            }
         }
 
         public void Add(string difficulity, int rounds, bool win) {
             stats.Add(new GameStat(difficulity, rounds, win));
         }
 
-        public void Reset() {
-            stats = new List<GameStat>();
-        }
-
-        public double GetAverageRounds(string difficulity) {
+        public double GetAverageRounds(int difficulity) {
             double games = 0;
             double rounds = 0;
             stats.ForEach(delegate(GameStat s) {
-                if (s.difficulity == difficulity) {
+                if (s.Difficulity == difficulity) {
                     games++;
-                    rounds += s.rounds;
+                    rounds += s.Rounds;
                 }
             });
             return rounds / games;
@@ -62,9 +64,9 @@ namespace MasterMind {
             double games = 0;
             double wins = 0;
             stats.ForEach(delegate(GameStat s) {
-                if (s.difficulity == difficulity) {
+                if (s.Difficulity == difficulity) {
                     games++;
-                    if (s.win) {
+                    if (s.Win) {
                         wins++;
                     }
                 }
@@ -72,25 +74,37 @@ namespace MasterMind {
             return (100 * wins / games);
         }
 
-        public void Load(string fileName) {
-            Reset();
-            StreamReader f = new StreamReader($"user_data/{fileName}");
-            stats.ForEach(delegate(GameStat s) {
-                string[] tabs = f.ReadLine().Split("\t");
-                string difficulity = tabs[0];
-                int rounds = int.Parse(tabs[1]);
-                bool win = bool.Parse(tabs[1]);
-                Add(difficulity, rounds, win);
-            });
-            f.Close();
+        private getFilePath() {
+            return $"user_data/{name}";
         }
 
-        public void Save(string fileName) {
-            StreamWriter f = new StreamWriter($"user_data/{fileName}");
-            stats.ForEach(delegate(GameStat s) {
-                f.WriteLine($"{s.difficulity}\t{s.rounds}\t{s.win}\n");
-            });
-            f.Close();
+        public void Load() {
+            // Reset();
+            Stream file = File.OpenRead(@getFilePath);
+            BinaryFormatter bf = new BinaryFormatter();
+            stats = (List<GameStat>) bf.Deserialize(file);
+            file.Close();
+            // StreamReader f = new StreamReader($"user_data/{fileName}");
+            // stats.ForEach(delegate(GameStat s) {
+                // string[] tabs = f.ReadLine().Split("\t");
+                // string difficulity = tabs[0];
+                // int rounds = int.Parse(tabs[1]);
+                // bool win = bool.Parse(tabs[1]);
+                // Add(difficulity, rounds, win);
+            // });
+            // f.Close();
+        }
+
+        public void Save() {
+            Stream file = File.Create(@getFilePath);
+            BinaryFormatter bf = new BinaryFormatter();
+            bf.Serialize(objectfil, stats);
+            file.Close();
+            // StreamWriter f = new StreamWriter($"user_data/{fileName}");
+            // stats.ForEach(delegate(GameStat s) {
+                // f.WriteLine($"{s.difficulity}\t{s.rounds}\t{s.win}\n");
+            // });
+            // f.Close();
         }
     }
 }

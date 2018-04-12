@@ -18,9 +18,6 @@ using System.Linq;
 namespace MasterMind { 
     enum GameStatus {Won, Lost, Ongoing};
     class MasterMind {
-        // static attriutes
-        private static Random rand = new Random();
-
         // properties
         public int RowCount { get; private set; }
         public int ColCount { get; private set; }
@@ -48,16 +45,17 @@ namespace MasterMind {
         }
 
         // testing constructure
-        public MasterMind(int[] customSecret) {
-            RowCount = 10;
-            ColCount = 4;
-            ColorCount = 6;
-            NewGame();
-            Secret = new Entry(customSecret, ColorCount);
-        }
+        // public MasterMind(int[] customSecret) {
+            // RowCount = 10;
+            // ColCount = 4;
+            // ColorCount = 6;
+            // NewGame();
+            // Secret = new Entry(customSecret, ColorCount);
+        // }
 
         // methods
         public void NewGame() {
+            Random rand = new Random();
             gameStatus = GameStatus.Ongoing;
             GuessCount = 0;
             bord = new Entry[RowCount];
