@@ -1,5 +1,5 @@
 
-## Aurthur note ##
+## Author note ##
 This project is in a very immature development state, so this readme is more
 notes to myself than an actual guide to how the software works
 

@@ -1,6 +1,4 @@
-':use strict';
-
-// const $ = require('jquery')
+'use strict';
 
 ////////////////////////////////////////////////////////////////////////////////
 // MasterMindBord
@@ -30,6 +28,7 @@ MasterMindBord.prototype.newGame = function(n_rows, n_cols) {
         this.n_cols = n_cols;
     }
     this.n_guesses = 0;
+    this.guess_vector = [-1, -1, -1, -1];
     
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     $.getJSON("http://localhost:5000/api/mm/new-game", 
@@ -45,10 +44,12 @@ MasterMindBord.prototype.update = function(response) {
 }
 
 MasterMindBord.prototype.guess = function() {
-    $.getJSON("http://localhost:5000/api/mm/guess/" + this.guess_vector.join(), 
-              $.proxy(this.update, this));
-    this.guess_vector = [-1, -1, -1, -1];
-    this.n_guesses++;
+    if (this.guess_vector.indexOf(-1) != -1) {
+        $.getJSON("http://localhost:5000/api/mm/guess/" + this.guess_vector.join(), 
+                $.proxy(this.update, this));
+        this.guess_vector = [-1, -1, -1, -1];
+        this.n_guesses++;
+    }
 }
 
 // private helper methods
@@ -135,58 +136,70 @@ MasterMindBord.prototype.insertBall = function(i_col, i_row, n_image) {
     }
 }
 
-// create one instance of the bord class
-var masterMindBord = new MasterMindBord();
-
+//
 ////////////////////////////////////////////////////////////////////////////////
 // events
 ////////////////////////////////////////////////////////////////////////////////
+// create one instance of the bord class
+var masterMindBord = new MasterMindBord();
 
 let canvas = $("#bord")[0];
 let context = masterMindBord.context;
 
-function getMousePos(canvas, evt) {
+////////////////////////////////////////
+// helper functions
+////////////////////////////////////////
+let getMousePos = function(canvas, event) {
     var rect = canvas.getBoundingClientRect();
     return {
-        x: evt.clientX - rect.left,
-        y: evt.clientY - rect.top
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
     };
 }
 
-canvas.addEventListener('click', function draw(evt) {
-    var pos = getMousePos(canvas, evt);
+let clickCanvas = function(event) {
+    var pos = getMousePos(canvas, event);
     let m = masterMindBord;
     let padding = m.padding;
     let i_col = Math.floor((pos.x - padding) / m.x_step);
     if (i_col < m.n_cols) {
         m.guess_vector[i_col] = (m.guess_vector[i_col] + 1) % m.n_colors
-        $("#debug_info").text(m.guess_vector);
         m.insertBall(i_col, m.n_guesses, m.guess_vector[i_col]);
     }
-}, false);
+}
 
-document.addEventListener('keydown', function(event) {
+var clickKey = function(event) {
     let m = masterMindBord;
-    let col_1 = '1'.charCodeAt(0);
-    let col_4 = '4'.charCodeAt(0);
-    let col_i = event.keyCode;
-    if ((col_1 <= col_i) && (col_i <= col_4)) {
-        let i_col = col_i - col_1;
-        $("#debug_info").text(i_col);
-        m.guess_vector[i_col] = (m.guess_vector[i_col] + 1) % m.n_colors
-        $("#debug_info").text(m.guess_vector);
-        m.insertBall(i_col, m.n_guesses, m.guess_vector[i_col]);
+    if (m.game_status == 'Ongoing') {
+        let col_1 = '1'.charCodeAt(0);
+        let col_4 = '4'.charCodeAt(0);
+        let col_i = event.keyCode;
+        if ((col_1 <= col_i) && (col_i <= col_4)) {
+            let i_col = col_i - col_1;
+            m.guess_vector[i_col] = (m.guess_vector[i_col] + 1) % m.n_colors
+            m.insertBall(i_col, m.n_guesses, m.guess_vector[i_col]);
+        } else if (event.keyCode == 13) { // return ley
+            masterMindBord.guess();
+        } 
     }
-});
+    $("#debug_info").text(event.keyCode);
+    if ((event.keyCode === 'n'.charCodeAt(0)) || 
+        (event.keyCode === 'N'.charCodeAt(0))) {
+        masterMindBord.newGame();
+    }
+}
+////////////////////////////////////////
+// binding
+////////////////////////////////////////
+canvas.addEventListener('click', clickCanvas, false);
+document.addEventListener('keydown', clickKey, false);
+$("#guess-btn").click(function() { masterMindBord.guess(); });
+$("#new_game-btn").click(function() { masterMindBord.newGame(); });
+
 
 $(document).ready(function() {
     // I think this is inly called on load and refresh, not when events update
     masterMindBord.newGame();
-
     // masterMindBord.guess_vector = [0, 0, 1, 1];
     // masterMindBord.guess();
-    // masterMindBord.guess("3,3,4,4");
-    // masterMindBord.newGame();
-    // // masterMindBord.guess("3,3,4,4");
-    // // masterMindBord.guess("5,5,0,0");
 });        

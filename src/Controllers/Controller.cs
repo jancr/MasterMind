@@ -1,10 +1,23 @@
-﻿using System;
+﻿// Copyright 2018 Jan Christian Refsgaard (jancrefsgaard@gmail.com)
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System;
 // using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace MasterMind.Controllers {
     public class MMController : Controller {
@@ -26,7 +39,7 @@ namespace MasterMind.Controllers {
         // [HttpGet]
         [HttpGet("api/mm/guess/{guess}")]
         public ActionResult Guess(string guess) {
-            if (game == null || game.gameStatus != GameStatus.Ongoing) {
+            if (game == null || game.Status != GameStatus.Ongoing) {
                 Reset();
             }
 
@@ -57,7 +70,7 @@ namespace MasterMind.Controllers {
             var json = new { 
                 bord = bord, 
                 pegs = pegs,
-                game_status = game.gameStatus.ToString()
+                game_status = game.Status.ToString()
             };
             return json;
         }

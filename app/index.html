@@ -7,16 +7,42 @@
     <!-- JQuery -->
     <script>window.$ = window.jQuery = require('jquery');</script>
     
-    <!-- bootstrap -->
-    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/photonkit/dist/css/photon.css">
+								 <!-- node_modules/photonkit/dist/css -->
 
+    <!-- bootstrap -->
+    <!-- <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script> -->
+    <!-- <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css"> -->
 </head>
 <body>
-    <canvas id="bord" width="500" height="1000" style="border:1px solid #000000;">
-    </canvas>
-    
-    <div id="debug_info"></div>
+
+
+
+
+
+	<div class="window">
+      <!-- .toolbar-header sits at the top of your app -->
+      <!-- <header class="toolbar toolbar-header"> -->
+        <!-- <h1 class="title">Photon</h1> -->
+      <!-- </header> -->
+<!--  -->
+      <!-- Your app's content goes inside .window-content -->
+        <div class="window-content">
+            <div class="pane-group">
+                <div class="pane-sm sidebar">stuff</div>
+                <div class="pane">
+                    <canvas id="bord" width="500" height="1000" style="border:1px solid #000000;">
+                    </canvas>
+                    <br>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="new-game-btn" type="button">New Game</button>
+                        <button class="btn btn-primary" id="guess-btn" type="button">Guess</button>
+                    </div>
+                    <div id="debug_info"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script type="text/javascript" src="master_mind.js"></script>
 </html>

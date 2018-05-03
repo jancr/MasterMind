@@ -15,15 +15,27 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MasterMind {
+    class Users {
+        private Dictionary<string, UserStats> users;
+        public Users() {
+            foreach (string userName in Directory.GetFiles("user_data")) {
+                UserStats us = new UserStats(userName);
+                us.Load();
+                users.Add(userName, us);
+            }
+        }
+    }
+
     class GameStat {
         // difficulity is defined as the number of colors
-        public int Difficulity { get; private set; }
-        public int Rouds { get; private set; }
+        public GameDifficulity Difficulity { get; private set; }
+        public int Rounds { get; private set; }
         public bool Win { get; private set; }
 
-        public GameStat(int difficulity, int rounds, bool win) {
+        public GameStat(GameDifficulity difficulity, int rounds, bool win) {
             Difficulity = difficulity;
             Rounds = rounds;
             Win = win;
@@ -31,27 +43,27 @@ namespace MasterMind {
     }
 
     class UserStats {
-        private string name;
-        private List<GameStat> stats;
+        public string Name { get; private set; }
+        public List<GameStat> Stats { get; private set; }
         
         public UserStats(string userName) {
-            name = userName;
+            Name = userName;
             string file = getFilePath();
             if (File.Exists(file)) {
                 Load();
             } else {
-                stats = new List<GameStat>();
+                Stats = new List<GameStat>();
             }
         }
 
-        public void Add(string difficulity, int rounds, bool win) {
-            stats.Add(new GameStat(difficulity, rounds, win));
+        public void Add(GameDifficulity difficulity, int rounds, bool win) {
+            Stats.Add(new GameStat(difficulity, rounds, win));
         }
 
-        public double GetAverageRounds(int difficulity) {
+        public double GetAverageRounds(GameDifficulity difficulity) {
             double games = 0;
             double rounds = 0;
-            stats.ForEach(delegate(GameStat s) {
+            Stats.ForEach(delegate(GameStat s) {
                 if (s.Difficulity == difficulity) {
                     games++;
                     rounds += s.Rounds;
@@ -60,10 +72,10 @@ namespace MasterMind {
             return rounds / games;
         }
 
-        public double GetWinPercentage(string difficulity) {
+        public double GetWinPercentage(GameDifficulity difficulity) {
             double games = 0;
             double wins = 0;
-            stats.ForEach(delegate(GameStat s) {
+            Stats.ForEach(delegate(GameStat s) {
                 if (s.Difficulity == difficulity) {
                     games++;
                     if (s.Win) {
@@ -74,15 +86,15 @@ namespace MasterMind {
             return (100 * wins / games);
         }
 
-        private getFilePath() {
-            return $"user_data/{name}";
+        private string getFilePath() {
+            return $"user_data/{Name}";
         }
 
         public void Load() {
             // Reset();
-            Stream file = File.OpenRead(@getFilePath);
+            Stream file = File.OpenRead(@getFilePath());
             BinaryFormatter bf = new BinaryFormatter();
-            stats = (List<GameStat>) bf.Deserialize(file);
+            Stats = (List<GameStat>) bf.Deserialize(file);
             file.Close();
             // StreamReader f = new StreamReader($"user_data/{fileName}");
             // stats.ForEach(delegate(GameStat s) {
@@ -96,9 +108,9 @@ namespace MasterMind {
         }
 
         public void Save() {
-            Stream file = File.Create(@getFilePath);
+            Stream file = File.Create(@getFilePath());
             BinaryFormatter bf = new BinaryFormatter();
-            bf.Serialize(objectfil, stats);
+            bf.Serialize(file, Stats);
             file.Close();
             // StreamWriter f = new StreamWriter($"user_data/{fileName}");
             // stats.ForEach(delegate(GameStat s) {

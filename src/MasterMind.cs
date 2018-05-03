@@ -17,13 +17,16 @@ using System.Linq;
 
 namespace MasterMind { 
     enum GameStatus {Won, Lost, Ongoing};
+    enum GameDifficulity {Easy, Medium, Hard};
+
     class MasterMind {
         // properties
         public int RowCount { get; private set; }
         public int ColCount { get; private set; }
         public int ColorCount { get; private set; }
 
-        public GameStatus gameStatus { get; private set; }
+        public GameStatus Status { get; private set; }
+        public GameDifficulity Difficulity { get; private set; }
         public Entry[] bord { get; private set; }
         public Peg[] pegs { get; private set; }
         public Entry Secret { get; private set; }
@@ -31,17 +34,21 @@ namespace MasterMind {
 
         // constructors
         public MasterMind() {
-            RowCount = 10;
-            ColCount = 4;
-            ColorCount = 6;
-            NewGame();
+            NewGame(10, 4, 6);
+        }
+        public MasterMind(GameDifficulity difficulity) {
+            // bord is always 10 x 4, but have more colors at higher difficuility
+            if (difficulity == GameDifficulity.Hard) {
+                NewGame(10, 4, 8);
+            } else if (difficulity == GameDifficulity.Medium) {
+                NewGame(10, 4, 6);
+            } else if (difficulity == GameDifficulity.Easy) {
+                NewGame(10, 4, 4);
+            }
         }
 
         public MasterMind(int rows, int columns, int colors) {
-            RowCount = rows;
-            ColCount = columns;
-            ColorCount = colors;
-            NewGame();
+            NewGame(rows, columns, colors);
         }
 
         // testing constructure
@@ -54,9 +61,13 @@ namespace MasterMind {
         // }
 
         // methods
-        public void NewGame() {
+        public void NewGame(int rows, int columns, int colors) {
+            RowCount = rows;
+            ColCount = columns;
+            ColorCount = colors;
+
             Random rand = new Random();
-            gameStatus = GameStatus.Ongoing;
+            Status = GameStatus.Ongoing;
             GuessCount = 0;
             bord = new Entry[RowCount];
             pegs = new Peg[RowCount];
@@ -71,8 +82,9 @@ namespace MasterMind {
         }
 
         public Peg Guess(int[] guess) {
-            if (gameStatus != GameStatus.Ongoing) {
-                throw new MasterMindGameOverException("Game Over");
+            if (Status != GameStatus.Ongoing) {
+                string msg = String.Format("Game Over, you have {0}", Status.ToString());
+                throw new MasterMindGameOverException(msg);
             }
             Entry newGuess = new Entry(guess, ColorCount); 
             Peg newPeg = new Peg(newGuess, Secret);
@@ -80,20 +92,20 @@ namespace MasterMind {
             pegs[GuessCount] = newPeg;
             GuessCount++;
             if (newPeg.Won()) {
-                gameStatus = GameStatus.Won;
+                Status = GameStatus.Won;
             } else if (GuessCount == RowCount) {
-                gameStatus = GameStatus.Lost;
+                Status = GameStatus.Lost;
             }
             return newPeg;
         }
 
     // debug stuff
-        public static void DumpArray(int[] array) {
-            foreach(int item in array) {
-                Console.Write("{0}", item);
-            }
-            Console.WriteLine();
-        }
+        // public static void DumpArray(int[] array) {
+            // foreach(int item in array) {
+                // Console.Write("{0}", item);
+            // }
+            // Console.WriteLine();
+        // }
     }
 
 
@@ -206,8 +218,8 @@ namespace MasterMind {
     public class MasterMindGameOverException: Exception {
         public MasterMindGameOverException() { }
         public MasterMindGameOverException(string message) : base(message) { }
-        public MasterMindGameOverException(string message, Exception inner)
-            : base(message, inner) { }
+        // public MasterMindGameOverException(string message, Exception inner)
+            // : base(message, inner) { }
     }
 
 }
