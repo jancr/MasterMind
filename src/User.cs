@@ -16,55 +16,54 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Linq;
 
 namespace MasterMind {
-    class Users {
-        private Dictionary<string, UserStats> users;
-        public Users() {
-            foreach (string userName in Directory.GetFiles("user_data")) {
-                UserStats us = new UserStats(userName);
-                us.Load();
-                users.Add(userName, us);
-            }
-        }
-    }
 
+    [Serializable]
     class GameStat {
         // difficulity is defined as the number of colors
         public GameDifficulity Difficulity { get; private set; }
         public int Rounds { get; private set; }
-        public bool Win { get; private set; }
+        public GameStatus Status { get; private set; }
 
-        public GameStat(GameDifficulity difficulity, int rounds, bool win) {
+        public GameStat(GameDifficulity difficulity, int rounds, GameStatus status) {
             Difficulity = difficulity;
             Rounds = rounds;
-            Win = win;
+            Status = status;
         }
     }
 
-    class UserStats {
+    class PlayerStat {
         public string Name { get; private set; }
         public List<GameStat> Stats { get; private set; }
         
-        public UserStats(string userName) {
-            Name = userName;
-            string file = getFilePath();
-            if (File.Exists(file)) {
+        public PlayerStat(string name, bool load) {
+            Setup(name, load);
+        }
+
+        public PlayerStat(string name) {
+            Setup(name, true);
+        }
+
+        private void Setup(string name, bool load) {
+            Name = name;
+            if (load && File.Exists(GetFilePath())) {
                 Load();
             } else {
                 Stats = new List<GameStat>();
             }
         }
 
-        public void Add(GameDifficulity difficulity, int rounds, bool win) {
-            Stats.Add(new GameStat(difficulity, rounds, win));
+        public void Add(GameDifficulity difficulity, int rounds, GameStatus status) {
+            Stats.Add(new GameStat(difficulity, rounds, status));
         }
 
         public double GetAverageRounds(GameDifficulity difficulity) {
             double games = 0;
             double rounds = 0;
             Stats.ForEach(delegate(GameStat s) {
-                if (s.Difficulity == difficulity) {
+                if (s.Difficulity == difficulity && s.Status == GameStatus.Won) {
                     games++;
                     rounds += s.Rounds;
                 }
@@ -78,7 +77,7 @@ namespace MasterMind {
             Stats.ForEach(delegate(GameStat s) {
                 if (s.Difficulity == difficulity) {
                     games++;
-                    if (s.Win) {
+                    if (s.Status == GameStatus.Won) {
                         wins++;
                     }
                 }
@@ -86,38 +85,71 @@ namespace MasterMind {
             return (100 * wins / games);
         }
 
-        private string getFilePath() {
+        private string GetFilePath() {
             return $"user_data/{Name}";
         }
 
         public void Load() {
-            // Reset();
-            Stream file = File.OpenRead(@getFilePath());
-            BinaryFormatter bf = new BinaryFormatter();
-            Stats = (List<GameStat>) bf.Deserialize(file);
+            Stream file = File.OpenRead(@GetFilePath());
+            if (file.Length != 0) {
+                BinaryFormatter bf = new BinaryFormatter();
+                Stats = (List<GameStat>) bf.Deserialize(file);
+            } else {
+                Stats = new List<GameStat>();
+            }
             file.Close();
-            // StreamReader f = new StreamReader($"user_data/{fileName}");
-            // stats.ForEach(delegate(GameStat s) {
-                // string[] tabs = f.ReadLine().Split("\t");
-                // string difficulity = tabs[0];
-                // int rounds = int.Parse(tabs[1]);
-                // bool win = bool.Parse(tabs[1]);
-                // Add(difficulity, rounds, win);
-            // });
-            // f.Close();
         }
 
         public void Save() {
-            Stream file = File.Create(@getFilePath());
+            Stream file = File.Create(@GetFilePath());
             BinaryFormatter bf = new BinaryFormatter();
             bf.Serialize(file, Stats);
             file.Close();
-            // StreamWriter f = new StreamWriter($"user_data/{fileName}");
-            // stats.ForEach(delegate(GameStat s) {
-                // f.WriteLine($"{s.difficulity}\t{s.rounds}\t{s.win}\n");
-            // });
-            // f.Close();
         }
+    }
+
+    class PlayerList {
+        public Dictionary<string, PlayerStat> players { get; private set; }
+
+        public PlayerList() {
+            players = new Dictionary<string, PlayerStat>();
+            foreach (string path in Directory.GetFiles("user_data")) {
+                string userName = Path.GetFileName(path);
+                PlayerStat player = new PlayerStat(userName);
+                player.Load();
+                players.Add(userName, player);
+            }
+        }
+
+        public void Save() {
+            foreach(PlayerStat player in players.Values) {
+                player.Save();
+            }
+        }
+
+        public PlayerStat GetPlayer(string playerName) {
+            if (players.ContainsKey(playerName)) {
+                return players[playerName];
+            }
+            PlayerStat player = new PlayerStat(playerName);
+            players.Add(playerName, player);
+            return player;
+        }
+
+        public List<KeyValuePair<string, double>> GetHighScores(
+                GameDifficulity difficulity, int topX) {
+            List<KeyValuePair<string, double>> playerScores = new List<KeyValuePair<string, double>>();
+            foreach(KeyValuePair<string, PlayerStat> player in players) {
+                double v = player.Value.GetWinPercentage(difficulity);
+                KeyValuePair<string, double> p = new KeyValuePair<string, double>(player.Key, v);
+                playerScores.Add(p);
+            }
+            playerScores.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+            topX = Math.Min(playerScores.Count, topX);
+            List<KeyValuePair<string, double>> highScores = playerScores.GetRange(0, topX);
+            return highScores;
+        }
+
     }
 }
 

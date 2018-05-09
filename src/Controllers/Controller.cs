@@ -25,6 +25,17 @@ namespace MasterMind.Controllers {
         private static int[][] bord;
         private static int[][] pegs;
 
+        [HttpGet("api/mm/high-score/{difficulity}/{topX}")]
+        public ActionResult HighScore(string difficulity, int topX) {
+            List<KeyValuePair<string, double>> highScore;
+            GameDifficulity gameDifficulity;
+            PlayerList playerList = new PlayerList();
+
+            GameDifficulity.TryParse(difficulity, out gameDifficulity);
+            highScore = playerList.GetHighScores(gameDifficulity, topX);
+            return Ok(highScore);
+        }
+
         [HttpGet("api/mm/new-game")]
         public ActionResult NewGame() {
             Reset();
@@ -36,13 +47,18 @@ namespace MasterMind.Controllers {
             return Ok(MakeBord());
         } 
 
-        // [HttpGet]
-        [HttpGet("api/mm/guess/{guess}")]
-        public ActionResult Guess(string guess) {
-            if (game == null || game.Status != GameStatus.Ongoing) {
+        [HttpGet("api/mm/guess/{guess}/{userName}")]
+        public ActionResult Guess(string guess, string userName) {
+            if (game == null) {
+                Reset();
+            } else if (game.Status != GameStatus.Ongoing) {
+                if (userName != "") {
+                    PlayerStat player = PlayerList.GetPlayer(userName);
+                } 
+                player.Add(game.Difficulity, game.GuessCount, game.Status);
+                player.Save();
                 Reset();
             }
-
             int[] arrayGuess = Array.ConvertAll(guess.Split(','), int.Parse);
             Peg peg = game.Guess(arrayGuess);
             return Ok(MakeBord());

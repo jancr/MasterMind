@@ -29,22 +29,16 @@ namespace MasterMind {
         public GameDifficulity Difficulity { get; private set; }
         public Entry[] bord { get; private set; }
         public Peg[] pegs { get; private set; }
-        public Entry Secret { get; private set; }
+        private Entry Secret { get; set; }
         public int GuessCount { get; private set; }
 
         // constructors
         public MasterMind() {
-            NewGame(10, 4, 6);
+            NewGame(GameDifficulity.Medium);
         }
+
         public MasterMind(GameDifficulity difficulity) {
-            // bord is always 10 x 4, but have more colors at higher difficuility
-            if (difficulity == GameDifficulity.Hard) {
-                NewGame(10, 4, 8);
-            } else if (difficulity == GameDifficulity.Medium) {
-                NewGame(10, 4, 6);
-            } else if (difficulity == GameDifficulity.Easy) {
-                NewGame(10, 4, 4);
-            }
+            NewGame(difficulity);
         }
 
         public MasterMind(int rows, int columns, int colors) {
@@ -61,6 +55,21 @@ namespace MasterMind {
         // }
 
         // methods
+        public void NewGame() {
+            NewGame(GameDifficulity.Medium);
+        }
+
+        public void NewGame(GameDifficulity difficulity) {
+            // bord is always 10 x 4, but have more colors at higher difficuility
+            if (difficulity == GameDifficulity.Hard) {
+                NewGame(10, 4, 8);
+            } else if (difficulity == GameDifficulity.Medium) {
+                NewGame(10, 4, 6);
+            } else if (difficulity == GameDifficulity.Easy) {
+                NewGame(10, 4, 4);
+            }
+        }
+
         public void NewGame(int rows, int columns, int colors) {
             RowCount = rows;
             ColCount = columns;
@@ -118,9 +127,7 @@ namespace MasterMind {
         public int White { get; set; } = -1;
 
         // constructors
-        public Peg() {
-            Set(-1, -1);
-        }
+        public Peg() { }
 
         public Peg(int black, int white) {
             Set(black, white);

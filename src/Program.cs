@@ -12,17 +12,16 @@ using MasterMind.MMStartup;
 namespace MasterMind {
     public class Program {
         public static void Main(string[] args) {
-            // if (args.Length < 1) {
-                // args = new[] {"5000"};
-            // }
-            if ((args.Length >= 1) && (args[0] == "console")) {
-                MasterMindConsle.Run();
-            } else {
-                if (args.Length == 1) {
-                    BuildWebHost(args[0]).Run();
+            if (args.Length >= 1) {
+                if (args[0] == "console") {
+                    MasterMindConsle.Run();
+                } else if (args[0] == "test") {
+                    TestHighScore.Test();
                 } else {
-                    BuildWebHost().Run();
+                    BuildWebHost(args[0]).Run();
                 }
+            } else {
+                BuildWebHost().Run();
             }
         }
 
