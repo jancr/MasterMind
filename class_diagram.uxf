@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <help_text>// Uncomment the following line to change the fontsize and font:
+fontsize=10
+fontfamily=Monospaced
+// fontfamily=SansSerif //possible: SansSerif,Serif,Monospaced
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Welcome to UMLet!
+//
+// Double-click on elements to add them to the diagram, or to copy them
+// Edit elements by modifying the text in this panel
+// Hold Ctrl to select multiple elements
+// Use Ctrl+mouse to select via lasso
+//
+// Use +/- or Ctrl+mouse wheel to zoom
+// Drag a whole relation at its central square icon
+//
+// Press Ctrl+C to copy the whole diagram to the system clipboard (then just paste it to, eg, Word)
+// Edit the files in the "palettes" directory to create your own element palettes
+//
+// Select "Custom Elements &gt; New..." to create new element types
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// This text will be stored with each diagram;  use it for notes.</help_text>
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>560</y>
+      <w>440</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>lw=2
+MasterMind
+--
++RowCount:int  {READONLY}
++ColCount:int  {READONLY}
++ColorCount:int  {READONLY}
++Status:GameStatus  {READONLY}
++Difficulity:GameDifficulity  {READONLY}
++bord:Entry[]  {READONLY}
++pegs:Peg[]  {READONLY}
+-Secret:Entry 
++int GuessCount {READONLY}
+--
++&lt;&lt;constructor&gt;&gt;MasterMind()
++&lt;&lt;constructor&gt;&gt;MasterMind(difficulity:GameDifficulity)
++&lt;&lt;constructor&gt;&gt;MasterMind(rows:int, columns:int, colors:int)
++NewGame()
++NewGame(GameDifficulity difficulity)
++NewGame(rows:int, columns:int, colors:int)
++Guess(guess:int[]):Peg</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>640</x>
+      <y>1020</y>
+      <w>350</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>MasterMindGameOverException
+--
++&lt;&lt;constructor&gt;&gt;MasterMindGameOverException(message:string)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>330</x>
+      <y>880</y>
+      <w>280</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>Peg
+--
+-int max;
++int Black {READONLY}
++int White {READONLY}
+--
++Peg()
++Peg(int black, int white)
++Peg(int black, int white, int max) 
++Peg(Entry guess, Entry secret)
++bool Won()
++bool Won(int max)
++void Set(int black, int white)
++void Set(int black, int white, int max)
++bool IsSet()
++void Guess(Entry guess, Entry secret)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>700</x>
+      <y>880</y>
+      <w>230</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Entry
+--
++Vector:int[] {READONLY}
++ColorCount:int[] {READONLY}
+--
++Entry(int[], int)
++Entry(int[], int[])
++Clone:Entry</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>460</x>
+      <y>790</y>
+      <w>50</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1..n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>810</x>
+      <y>790</y>
+      <w>50</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=2..n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>660</x>
+      <y>790</y>
+      <w>30</w>
+      <h>250</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;230.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>180</x>
+      <y>90</y>
+      <w>100</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enumeration&gt;&gt;
+GameDifficulity
+--
+Hard
+Medium
+Easy</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>60</x>
+      <y>90</y>
+      <w>90</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enumeration&gt;&gt;
+GameStatus
+--
+Won
+Lost
+Ongoing</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>850</x>
+      <y>380</y>
+      <w>290</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Startup
+MasterMind::MMStartup
+--
++Configuration:IConfiguration
+--
++Startup(configuration:IConfiguration)
++ConfigureServices(services:IServiceCollection)
++Configure(app:IApplicationBuilder,
+           env:IHostingEnvironment)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>360</y>
+      <w>400</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>MMController
+MasterMind::Controllers
+--
++NewGame():ActionResult
++Show():ActionResult 
++Guess(guess:string):ActionResult
++ActionResult HighScore(difficulity:GameDifficulity, topX:int) 
+-Reset()
+-MakeBord():Object 
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>560</x>
+      <y>290</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>Controller</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>600</x>
+      <y>310</y>
+      <w>30</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>870</x>
+      <y>560</y>
+      <w>240</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Program
+--
+--
+_+Main(args:str)_
+_BuildWebHost():IWebHost _
+_BuildWebHost(port:string):IWebHost _</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>870</x>
+      <y>700</y>
+      <w>240</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>MasterMindConsole
+--
+_-game:MasterMind_
+_-guessStr:strig_
+--
+_-Help()_
+_-ParseGuess()_
+_-ClearCurrentConsoleLine()_
+_-PrintBordLine()_
+_+Run()_
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>980</x>
+      <y>640</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>980</x>
+      <y>490</y>
+      <w>30</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>790</x>
+      <y>430</y>
+      <w>80</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>730</x>
+      <y>0</y>
+      <w>400</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>PlayerStat
+--
++Name:string  {READONLY}
++Stats:List&lt;GameStat&gt;  {READONLY}
+-- 
++&lt;&lt;constructor&gt;&gt;PlayerStat(name:string, load:bool)
++&lt;&lt;constructor&gt;&gt;PlayerStat(name:string)
+-Setup(name:string, load:bool)
++Add(difficulity:GameDifficulity, rounds:int, status:GameStatus)
++GetAverageRounds(difficulity:GameDifficulity):double
++GetWinPercentage(difficulity:GameDifficulity ):double
+-GetFilePath():string
++Load()
++Save()
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>810</x>
+      <y>250</y>
+      <w>340</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>GameStat
+--
++Difficulity:GameDifficulity  {READONLY}
++Rounds:int  {READONLY}
++Status:GameStatus  {READONLY}
+--
++&lt;&lt;constructor&gt;&gt;GameStat(difficulity:GameDifficulity, 
+                         rounds:int, status:GameStatus)
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>310</x>
+      <y>50</y>
+      <w>320</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>PlayerList
+--
++players:Dictionary&lt;string, PlayerStat&gt;  {READONLY}
+--
++&lt;&lt;constructor&gt;&gt;PlayerList()
++Save()
++GetPlayer(playerName:string):PlayerStat
++GetHighScores(difficulity:GameDifficulity, 
+               topX:int)
+        :List&lt;KeyValuePair&lt;string, double&gt;&gt; 
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>960</x>
+      <y>170</y>
+      <w>50</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>620</x>
+      <y>90</y>
+      <w>130</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>750</x>
+      <y>170</y>
+      <w>30</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;190.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>470</x>
+      <y>160</y>
+      <w>30</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;200.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>210</y>
+      <w>210</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=.
+main
+&lt;&lt;electrons&gt;&gt;
+--
+app
+mainWindow
+browserWindow
+--
++startAPI()
++createWindow()
++writeLogs(msg:string)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>40</x>
+      <y>380</y>
+      <w>280</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>lt=.
+MasterMindBord
+&lt;&lt;electrons&gt;&gt;
+--
+bord:obect
+pegs:object
+game_status:object
+guess_vector: int[]
+n_guesses: int
+canvas:DOMElement
+debug_info:DOMElement
+n_rows:int
+n_cols:int
+context:object
+n_colors:int
+padding:int 
+--
+newGame(n_rows:int, n_cols:int)
+update(response:obect)
+guess()
+_drawBord()
+insertPeg(i_row:int, n:int, img_str:str)
+insertBall(i_colint:, i_row:int, n_image:int)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>40</x>
+      <y>710</y>
+      <w>280</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.
+HelperFunctios
+&lt;&lt;javascript&gt;&gt;
+--
+--
++getMousePos(canvas:DOMElement, event:Event)
++clickCanvas(event:Event)
++clickKey(event:Event)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>310</x>
+      <y>420</y>
+      <w>110</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.&gt;
+</panel_attributes>
+    <additional_attributes>10.0;20.0;90.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>600</x>
+      <y>490</y>
+      <w>30</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>830</x>
+      <y>740</y>
+      <w>60</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;40.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>170</x>
+      <y>640</y>
+      <w>30</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>170</x>
+      <y>320</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+</diagram>
