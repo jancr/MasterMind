@@ -1,4 +1,3 @@
-
 // Copyright 2018 Jan Christian Refsgaard (jancrefsgaard@gmail.com)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,18 +20,19 @@ namespace MasterMind {
     enum GameDifficulity {Easy, Medium, Hard};
 
     class MasterMind {
+        // attributes 
+        private Entry secret;
+
         // properties
         public int RowCount { get; private set; }
         public int ColCount { get; private set; }
         public int ColorCount { get; private set; }
 
+        public int GuessCount { get; private set; }
         public GameStatus Status { get; private set; }
         public GameDifficulity Difficulity { get; private set; }
         public Entry[] Bord { get; private set; }
         public Peg[] Pegs { get; private set; }
-        // private Entry Secret { get; set; }
-        private Entry secret;
-        public int GuessCount { get; private set; }
 
         // constructors
         public MasterMind() {
@@ -46,15 +46,6 @@ namespace MasterMind {
         public MasterMind(int rows, int columns, int colors) {
             NewGame(rows, columns, colors);
         }
-
-        // testing constructure
-        // public MasterMind(int[] customSecret) {
-            // RowCount = 10;
-            // ColCount = 4;
-            // ColorCount = 6;
-            // NewGame();
-            // Secret = new Entry(customSecret, ColorCount);
-        // }
 
         // methods
         public void NewGame() {
@@ -108,14 +99,6 @@ namespace MasterMind {
             }
             return newPeg;
         }
-
-    // debug stuff
-        // public static void DumpArray(int[] array) {
-            // foreach(int item in array) {
-                // Console.Write("{0}", item);
-            // }
-            // Console.WriteLine();
-        // }
     }
 
 
@@ -229,5 +212,5 @@ namespace MasterMind {
         // public MasterMindGameOverException(string message, Exception inner)
             // : base(message, inner) { }
     }
-}
 
+}

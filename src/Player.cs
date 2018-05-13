@@ -27,7 +27,6 @@ namespace MasterMind {
 
     [Serializable]
     class GameStat {
-        // difficulity is defined as the number of colors
         public GameDifficulity Difficulity { get; private set; }
         public int Rounds { get; private set; }
         public GameStatus Status { get; private set; }
@@ -40,9 +39,11 @@ namespace MasterMind {
     }
 
     class Player : ISerializeObject {
+        // properties
         public string Name { get; private set; }
         public List<GameStat> Stats { get; private set; }
-        
+
+        // constructors
         public Player(string name, bool load) {
             Setup(name, load);
         }
@@ -51,6 +52,7 @@ namespace MasterMind {
             Setup(name, true);
         }
 
+        // methods
         private void Setup(string name, bool load) {
             Name = name;
             if (load && File.Exists(GetFilePath())) {
@@ -114,12 +116,15 @@ namespace MasterMind {
     }
 
     class PlayerList : ISerializeObject {
+        // properties
         public Dictionary<string, Player> players { get; private set; }
 
+        // construcors
         public PlayerList() {
             Load();
         }
 
+        // methods
         public void Load() {
             players = new Dictionary<string, Player>();
             foreach (string path in Directory.GetFiles("user_data")) {
@@ -158,7 +163,6 @@ namespace MasterMind {
             List<KeyValuePair<string, double>> highScores = playerScores.GetRange(0, topX);
             return highScores;
         }
-
     }
 }
 
