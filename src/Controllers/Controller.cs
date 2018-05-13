@@ -22,8 +22,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace MasterMind.Controllers {
     public class MMController : Controller {
         private static MasterMind game;
-        private static int[][] bord;
-        private static int[][] pegs;
 
         [HttpGet("api/mm/high-score/{difficulity}/{topX}")]
         public ActionResult HighScore(string difficulity, int topX) {
@@ -53,10 +51,10 @@ namespace MasterMind.Controllers {
                 Reset();
             } else if (game.Status != GameStatus.Ongoing) {
                 if (userName != "") {
-                    PlayerStat player = PlayerList.GetPlayer(userName);
-                } 
+                    Player player = new PlayerList().GetPlayer(userName);
                 player.Add(game.Difficulity, game.GuessCount, game.Status);
                 player.Save();
+                } 
                 Reset();
             }
             int[] arrayGuess = Array.ConvertAll(guess.Split(','), int.Parse);
@@ -66,15 +64,16 @@ namespace MasterMind.Controllers {
 
         private void Reset() {
             game = new MasterMind();
-            bord = new int[game.RowCount][];
-            pegs = new int[game.RowCount][];
         }
 
         private Object MakeBord() {
+            int[][] bord = new int[game.RowCount][];
+            int[][] pegs = new int[game.RowCount][];
+
             for (int i = 0; i < game.RowCount; i++) {
                 if (i < game.GuessCount) {
-                    bord[i] = game.bord[i].Vector;
-                    pegs[i] = new[] { game.pegs[i].Black, game.pegs[i].White };
+                    bord[i] = game.Bord[i].Vector;
+                    pegs[i] = new[] { game.Pegs[i].Black, game.Pegs[i].White };
                 } else {
                     bord[i] = new int[game.ColCount];
                     pegs[i] = new[] { -1, -1 };

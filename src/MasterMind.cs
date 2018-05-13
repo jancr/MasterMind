@@ -27,9 +27,10 @@ namespace MasterMind {
 
         public GameStatus Status { get; private set; }
         public GameDifficulity Difficulity { get; private set; }
-        public Entry[] bord { get; private set; }
-        public Peg[] pegs { get; private set; }
-        private Entry Secret { get; set; }
+        public Entry[] Bord { get; private set; }
+        public Peg[] Pegs { get; private set; }
+        // private Entry Secret { get; set; }
+        private Entry secret;
         public int GuessCount { get; private set; }
 
         // constructors
@@ -78,16 +79,15 @@ namespace MasterMind {
             Random rand = new Random();
             Status = GameStatus.Ongoing;
             GuessCount = 0;
-            bord = new Entry[RowCount];
-            pegs = new Peg[RowCount];
-            int[] secret = new int[ColCount];
+            Bord = new Entry[RowCount];
+            Pegs = new Peg[RowCount];
+            int[] _secret = new int[ColCount];
 
             for(int i = 0; i < ColCount; i++) {
                 int color = rand.Next(0, ColorCount);
-                secret[i] = color;
-                // secretColorCount[color]++;
+                _secret[i] = color;
             }
-            Secret = new Entry(secret, ColorCount);
+            secret = new Entry(_secret, ColorCount);
         }
 
         public Peg Guess(int[] guess) {
@@ -96,9 +96,9 @@ namespace MasterMind {
                 throw new MasterMindGameOverException(msg);
             }
             Entry newGuess = new Entry(guess, ColorCount); 
-            Peg newPeg = new Peg(newGuess, Secret);
-            bord[GuessCount] = newGuess;
-            pegs[GuessCount] = newPeg;
+            Peg newPeg = new Peg(newGuess, secret);
+            Bord[GuessCount] = newGuess;
+            Pegs[GuessCount] = newPeg;
             GuessCount++;
             if (newPeg.Won()) {
                 Status = GameStatus.Won;

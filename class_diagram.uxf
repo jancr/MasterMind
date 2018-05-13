@@ -29,8 +29,8 @@ fontfamily=Monospaced
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>400</x>
-      <y>560</y>
+      <x>430</x>
+      <y>580</y>
       <w>440</w>
       <h>240</h>
     </coordinates>
@@ -42,10 +42,10 @@ MasterMind
 +ColorCount:int  {READONLY}
 +Status:GameStatus  {READONLY}
 +Difficulity:GameDifficulity  {READONLY}
-+bord:Entry[]  {READONLY}
-+pegs:Peg[]  {READONLY}
--Secret:Entry 
-+int GuessCount {READONLY}
++Bord:Entry[]  {READONLY}
++Pegs:Peg[]  {READONLY}
++GuessCount:int  {READONLY}
+-secret:Entry 
 --
 +&lt;&lt;constructor&gt;&gt;MasterMind()
 +&lt;&lt;constructor&gt;&gt;MasterMind(difficulity:GameDifficulity)
@@ -59,8 +59,8 @@ MasterMind
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>640</x>
-      <y>1020</y>
+      <x>780</x>
+      <y>870</y>
       <w>350</w>
       <h>50</h>
     </coordinates>
@@ -72,8 +72,8 @@ MasterMind
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>330</x>
-      <y>880</y>
+      <x>320</x>
+      <y>900</y>
       <w>280</w>
       <h>190</h>
     </coordinates>
@@ -84,78 +84,78 @@ MasterMind
 +int White {READONLY}
 --
 +Peg()
-+Peg(int black, int white)
-+Peg(int black, int white, int max) 
-+Peg(Entry guess, Entry secret)
-+bool Won()
-+bool Won(int max)
-+void Set(int black, int white)
-+void Set(int black, int white, int max)
-+bool IsSet()
-+void Guess(Entry guess, Entry secret)</panel_attributes>
++Peg(black:int, white:int)
++Peg(black:int, white:int, max:int) 
++Peg(guess:Entry, secret:Entry)
++Won():bool
++Won(max):bool
++Set(black:int, white:int)
++Set(black:int, white:int, max:int)
++IsSet():bool
++Guess(guess:Entry, secret:Entry)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>700</x>
-      <y>880</y>
-      <w>230</w>
-      <h>120</h>
+      <x>640</x>
+      <y>960</y>
+      <w>320</w>
+      <h>100</h>
     </coordinates>
     <panel_attributes>Entry
 --
 +Vector:int[] {READONLY}
 +ColorCount:int[] {READONLY}
 --
-+Entry(int[], int)
-+Entry(int[], int[])
++&lt;&lt;constructor&gt;&gt;Entry(colorVector:int[], nColors:int)
++&lt;&lt;constructor&gt;&gt;Entry(vector:int[], colorsCount:int[])
 +Clone:Entry</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>460</x>
-      <y>790</y>
+      <x>450</x>
+      <y>810</y>
       <w>50</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
-m2=1..n</panel_attributes>
+m2=1..*</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>810</x>
-      <y>790</y>
+      <x>740</x>
+      <y>810</y>
       <w>50</w>
-      <h>110</h>
+      <h>170</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
-m2=2..n</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+m2=2..*</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>660</x>
-      <y>790</y>
+      <x>830</x>
+      <y>810</y>
       <w>30</w>
-      <h>250</h>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
-    <additional_attributes>10.0;230.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>180</x>
-      <y>90</y>
-      <w>100</w>
+      <x>160</x>
+      <y>30</y>
+      <w>110</w>
       <h>80</h>
     </coordinates>
     <panel_attributes>&lt;&lt;enumeration&gt;&gt;
@@ -169,9 +169,9 @@ Easy</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>60</x>
-      <y>90</y>
-      <w>90</w>
+      <x>160</x>
+      <y>130</y>
+      <w>110</w>
       <h>80</h>
     </coordinates>
     <panel_attributes>&lt;&lt;enumeration&gt;&gt;
@@ -185,8 +185,8 @@ Ongoing</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>850</x>
-      <y>380</y>
+      <x>880</x>
+      <y>410</y>
       <w>290</w>
       <h>120</h>
     </coordinates>
@@ -205,18 +205,20 @@ MasterMind::MMStartup
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>400</x>
-      <y>360</y>
-      <w>400</w>
+      <x>430</x>
+      <y>390</y>
+      <w>410</w>
       <h>140</h>
     </coordinates>
     <panel_attributes>MMController
 MasterMind::Controllers
 --
+_-game: MasterMind_
+--
 +NewGame():ActionResult
 +Show():ActionResult 
 +Guess(guess:string):ActionResult
-+ActionResult HighScore(difficulity:GameDifficulity, topX:int) 
++HighScore(difficulity:GameDifficulity, topX:int): ActionResult
 -Reset()
 -MakeBord():Object 
 </panel_attributes>
@@ -225,8 +227,8 @@ MasterMind::Controllers
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>560</x>
-      <y>290</y>
+      <x>590</x>
+      <y>320</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -236,8 +238,8 @@ MasterMind::Controllers
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>600</x>
-      <y>310</y>
+      <x>630</x>
+      <y>340</y>
       <w>30</w>
       <h>70</h>
     </coordinates>
@@ -247,8 +249,8 @@ MasterMind::Controllers
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>870</x>
-      <y>560</y>
+      <x>900</x>
+      <y>580</y>
       <w>240</w>
       <h>90</h>
     </coordinates>
@@ -263,9 +265,9 @@ _BuildWebHost(port:string):IWebHost _</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>870</x>
-      <y>700</y>
-      <w>240</w>
+      <x>930</x>
+      <y>720</y>
+      <w>180</w>
       <h>120</h>
     </coordinates>
     <panel_attributes>MasterMindConsole
@@ -284,8 +286,8 @@ _+Run()_
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>980</x>
-      <y>640</y>
+      <x>1010</x>
+      <y>660</y>
       <w>30</w>
       <h>80</h>
     </coordinates>
@@ -295,44 +297,44 @@ _+Run()_
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>980</x>
-      <y>490</y>
+      <x>1010</x>
+      <y>520</y>
       <w>30</w>
-      <h>90</h>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>790</x>
-      <y>430</y>
-      <w>80</w>
+      <x>830</x>
+      <y>460</y>
+      <w>70</w>
       <h>30</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;60.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>730</x>
-      <y>0</y>
+      <x>760</x>
+      <y>30</y>
       <w>400</w>
       <h>180</h>
     </coordinates>
-    <panel_attributes>PlayerStat
+    <panel_attributes>Player
 --
 +Name:string  {READONLY}
 +Stats:List&lt;GameStat&gt;  {READONLY}
--- 
-+&lt;&lt;constructor&gt;&gt;PlayerStat(name:string, load:bool)
-+&lt;&lt;constructor&gt;&gt;PlayerStat(name:string)
+--
++&lt;&lt;constructor&gt;&gt;Player(name:string, load:bool)
++&lt;&lt;constructor&gt;&gt;Player(name:string)
 -Setup(name:string, load:bool)
 +Add(difficulity:GameDifficulity, rounds:int, status:GameStatus)
 +GetAverageRounds(difficulity:GameDifficulity):double
-+GetWinPercentage(difficulity:GameDifficulity ):double
++GetWinPercentage(difficulity:GameDifficulity):double
 -GetFilePath():string
 +Load()
 +Save()
@@ -343,10 +345,10 @@ _+Run()_
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>810</x>
-      <y>250</y>
+      <x>830</x>
+      <y>280</y>
       <w>340</w>
-      <h>90</h>
+      <h>100</h>
     </coordinates>
     <panel_attributes>GameStat
 --
@@ -355,7 +357,7 @@ _+Run()_
 +Status:GameStatus  {READONLY}
 --
 +&lt;&lt;constructor&gt;&gt;GameStat(difficulity:GameDifficulity, 
-                         rounds:int, status:GameStatus)
+                       rounds:int, status:GameStatus)
 
 </panel_attributes>
     <additional_attributes/>
@@ -363,55 +365,55 @@ _+Run()_
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>310</x>
-      <y>50</y>
-      <w>320</w>
-      <h>120</h>
+      <x>340</x>
+      <y>150</y>
+      <w>330</w>
+      <h>130</h>
     </coordinates>
     <panel_attributes>PlayerList
 --
-+players:Dictionary&lt;string, PlayerStat&gt;  {READONLY}
++players:Dictionary&lt;string, Player&gt;  {READONLY}
 --
 +&lt;&lt;constructor&gt;&gt;PlayerList()
-+Save()
-+GetPlayer(playerName:string):PlayerStat
-+GetHighScores(difficulity:GameDifficulity, 
-               topX:int)
++GetPlayer(playerName:string):Player
++GetHighScores(difficulity:GameDifficulity, topX:int)
         :List&lt;KeyValuePair&lt;string, double&gt;&gt; 
++Save()
++Load()
 </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>960</x>
-      <y>170</y>
-      <w>50</w>
+      <x>980</x>
+      <y>200</y>
+      <w>30</w>
       <h>100</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
-m2=0..n</panel_attributes>
+m2=*</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>620</x>
-      <y>90</y>
-      <w>130</w>
+      <x>660</x>
+      <y>170</y>
+      <w>120</w>
       <h>30</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 m1=1
-m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+m2=*</panel_attributes>
+    <additional_attributes>10.0;10.0;100.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>750</x>
-      <y>170</y>
+      <x>780</x>
+      <y>200</y>
       <w>30</w>
       <h>210</h>
     </coordinates>
@@ -421,19 +423,19 @@ m2=0..n</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>470</x>
-      <y>160</y>
+      <x>500</x>
+      <y>270</y>
       <w>30</w>
-      <h>220</h>
+      <h>140</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;200.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>80</x>
-      <y>210</y>
+      <x>110</x>
+      <y>240</y>
       <w>210</w>
       <h>120</h>
     </coordinates>
@@ -453,8 +455,8 @@ browserWindow
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>40</x>
-      <y>380</y>
+      <x>70</x>
+      <y>410</y>
       <w>280</w>
       <h>270</h>
     </coordinates>
@@ -487,8 +489,8 @@ insertBall(i_colint:, i_row:int, n_image:int)
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>40</x>
-      <y>710</y>
+      <x>70</x>
+      <y>740</y>
       <w>280</w>
       <h>80</h>
     </coordinates>
@@ -506,8 +508,8 @@ HelperFunctios
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>310</x>
-      <y>420</y>
+      <x>340</x>
+      <y>450</y>
       <w>110</w>
       <h>40</h>
     </coordinates>
@@ -518,30 +520,30 @@ HelperFunctios
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>600</x>
-      <y>490</y>
+      <x>630</x>
+      <y>520</y>
       <w>30</w>
-      <h>90</h>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>830</x>
-      <y>740</y>
-      <w>60</w>
+      <x>860</x>
+      <y>760</y>
+      <w>90</w>
       <h>30</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;40.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>170</x>
-      <y>640</y>
+      <x>200</x>
+      <y>670</y>
       <w>30</w>
       <h>90</h>
     </coordinates>
@@ -551,12 +553,83 @@ HelperFunctios
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>170</x>
-      <y>320</y>
+      <x>200</x>
+      <y>350</y>
       <w>30</w>
       <h>80</h>
     </coordinates>
     <panel_attributes>lt=-&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>30</y>
+      <w>210</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+ISerializeObject
+--
+--
+Save();
+Load();</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>600</x>
+      <y>50</y>
+      <w>180</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>490</x>
+      <y>90</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1030</x>
+      <y>950</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>Exception</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1070</x>
+      <y>910</y>
+      <w>30</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>590</x>
+      <y>1000</y>
+      <w>70</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;10.0</additional_attributes>
   </element>
 </diagram>

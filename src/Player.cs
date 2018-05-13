@@ -20,6 +20,11 @@ using System.Linq;
 
 namespace MasterMind {
 
+    interface ISerializeObject {
+        void Save();
+        void Load();
+    }
+
     [Serializable]
     class GameStat {
         // difficulity is defined as the number of colors
@@ -34,15 +39,15 @@ namespace MasterMind {
         }
     }
 
-    class PlayerStat {
+    class Player : ISerializeObject {
         public string Name { get; private set; }
         public List<GameStat> Stats { get; private set; }
         
-        public PlayerStat(string name, bool load) {
+        public Player(string name, bool load) {
             Setup(name, load);
         }
 
-        public PlayerStat(string name) {
+        public Player(string name) {
             Setup(name, true);
         }
 
@@ -108,30 +113,34 @@ namespace MasterMind {
         }
     }
 
-    class PlayerList {
-        public Dictionary<string, PlayerStat> players { get; private set; }
+    class PlayerList : ISerializeObject {
+        public Dictionary<string, Player> players { get; private set; }
 
         public PlayerList() {
-            players = new Dictionary<string, PlayerStat>();
+            Load();
+        }
+
+        public void Load() {
+            players = new Dictionary<string, Player>();
             foreach (string path in Directory.GetFiles("user_data")) {
                 string userName = Path.GetFileName(path);
-                PlayerStat player = new PlayerStat(userName);
+                Player player = new Player(userName);
                 player.Load();
                 players.Add(userName, player);
             }
         }
 
         public void Save() {
-            foreach(PlayerStat player in players.Values) {
+            foreach(Player player in players.Values) {
                 player.Save();
             }
         }
 
-        public PlayerStat GetPlayer(string playerName) {
+        public Player GetPlayer(string playerName) {
             if (players.ContainsKey(playerName)) {
                 return players[playerName];
             }
-            PlayerStat player = new PlayerStat(playerName);
+            Player player = new Player(playerName);
             players.Add(playerName, player);
             return player;
         }
@@ -139,7 +148,7 @@ namespace MasterMind {
         public List<KeyValuePair<string, double>> GetHighScores(
                 GameDifficulity difficulity, int topX) {
             List<KeyValuePair<string, double>> playerScores = new List<KeyValuePair<string, double>>();
-            foreach(KeyValuePair<string, PlayerStat> player in players) {
+            foreach(KeyValuePair<string, Player> player in players) {
                 double v = player.Value.GetWinPercentage(difficulity);
                 KeyValuePair<string, double> p = new KeyValuePair<string, double>(player.Key, v);
                 playerScores.Add(p);
