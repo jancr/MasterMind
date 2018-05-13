@@ -7,35 +7,36 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
-let mainWindow
+let mainWindow;
+let backendStarted = false;
 
 function createWindow () {
-	mainWindow = new BrowserWindow({width: 1100, height: 550})
+	mainWindow = new BrowserWindow({width: 1100, height: 550});
 
 	mainWindow.loadURL(url.format({
 		pathname: path.join(__dirname, 'index.html'),
 		protocol: 'file:',
 		slashes: true
-	}))
+	}));
 
 	// TODO uncomment
-	mainWindow.webContents.openDevTools()
+	mainWindow.webContents.openDevTools();
 
 	mainWindow.on('closed', function () {
 		mainWindow = null
-	})
+	});
 }
 
 
 // TODO: remember to uncomment!!!!
-app.on('ready', startApi)
+app.on('ready', startApi);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
 	// On OS X it is common for applications and their menu bar
 	// to stay active until the user quits explicitly with Cmd + Q
 	if (process.platform !== 'darwin') {
-		app.quit()
+		app.quit();
 	}
 })
 
@@ -43,7 +44,7 @@ app.on('activate', function () {
 	// On OS X it's common to re-create a window in the app when the
 	// dock icon is clicked and there are no other windows open.
 	if (mainWindow === null) {
-		createWindow()
+		createWindow();
 	}
 })
 
@@ -60,17 +61,22 @@ var apiProcess = null;
 function startApi() {
 	var proc = require('child_process').spawn;
 	//  run server
-	var mm_bin_path = path.join(__dirname, '..\\src\\bin\\dist\\win\\MasterMind.exe')
+	var mm_bin_path = path.join(__dirname, '..\\src\\bin\\dist\\win\\MasterMind.exe');
 	if (os.platform() === 'darwin') {
-		mm_bin_path = path.join(__dirname, '..//src//bin//dist//osx//MasterMind')
+		mm_bin_path = path.join(__dirname, '..//src//bin//dist//osx//MasterMind');
 	} 
 	// TODO: linux
-	apiProcess = proc(mm_bin_path)
+	apiProcess = proc(mm_bin_path);
 
 	apiProcess.stdout.on('data', (data) => {
 		writeLog(`stdout: ${data}`);
-		if (mainWindow == null) {
-			createWindow();
+		if (mainWindow == null && !backendStarted) {
+            if (/Application started/.exec(data)) {
+                backendStarted = true;
+            }
+            if (backendStarted) {
+                createWindow();
+            }
 		}
 	});
 }
