@@ -13,7 +13,6 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "jquery": "^3.2.1",
-    "photonkit": "^0.1.2",
     "popper.js": "^1.12.9"
   },
   "scripts": {
@@ -26,13 +25,6 @@
     "directories": {
       "buildResources": "../../assets",
       "output": "../../dist"
-    },
-    "extraResources": {
-      "from": "../src/bin/dist/",
-      "to": "api/bin/dist/",
-      "filter": [
-        "**/*"
-      ]
     },
     "mac": {
       "category": "games"

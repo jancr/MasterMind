@@ -117,7 +117,7 @@ namespace MasterMind {
 
     class PlayerList : ISerializeObject {
         // properties
-        public Dictionary<string, Player> players { get; private set; }
+        public Dictionary<string, Player> Players { get; private set; }
 
         // construcors
         public PlayerList() {
@@ -126,34 +126,34 @@ namespace MasterMind {
 
         // methods
         public void Load() {
-            players = new Dictionary<string, Player>();
+            Players = new Dictionary<string, Player>();
             foreach (string path in Directory.GetFiles("user_data")) {
                 string userName = Path.GetFileName(path);
                 Player player = new Player(userName);
                 player.Load();
-                players.Add(userName, player);
+                Players.Add(userName, player);
             }
         }
 
         public void Save() {
-            foreach(Player player in players.Values) {
+            foreach(Player player in Players.Values) {
                 player.Save();
             }
         }
 
         public Player GetPlayer(string playerName) {
-            if (players.ContainsKey(playerName)) {
-                return players[playerName];
+            if (Players.ContainsKey(playerName)) {
+                return Players[playerName];
             }
             Player player = new Player(playerName);
-            players.Add(playerName, player);
+            Players.Add(playerName, player);
             return player;
         }
 
         public List<KeyValuePair<string, double>> GetHighScores(
                 GameDifficulity difficulity, int topX) {
             List<KeyValuePair<string, double>> playerScores = new List<KeyValuePair<string, double>>();
-            foreach(KeyValuePair<string, Player> player in players) {
+            foreach(KeyValuePair<string, Player> player in Players) {
                 double v = player.Value.GetWinPercentage(difficulity);
                 KeyValuePair<string, double> p = new KeyValuePair<string, double>(player.Key, v);
                 playerScores.Add(p);

@@ -34,39 +34,44 @@ namespace MasterMind.Controllers {
             return Ok(highScore);
         }
 
-        [HttpGet("api/mm/new-game")]
-        public ActionResult NewGame() {
-            Reset();
-            return Ok(MakeBord());
+        [HttpGet("api/mm/new-game/{difficulity}")]
+        public ActionResult NewGame(string difficulity) {
+            GameDifficulity gameDifficulity;
+            GameDifficulity.TryParse(difficulity, out gameDifficulity);
+            Reset(gameDifficulity);
+            return MakeBord();
         }
 
         [HttpGet("api/mm/show")]
         public ActionResult Show() {
-            return Ok(MakeBord());
+            return MakeBord();
         } 
 
         [HttpGet("api/mm/guess/{guess}/{userName}")]
         public ActionResult Guess(string guess, string userName) {
             if (game == null) {
-                Reset();
-            } else if (game.Status != GameStatus.Ongoing) {
+                Reset(GameDifficulity.Medium);
+            } 
+            int[] arrayGuess = Array.ConvertAll(guess.Split(','), int.Parse);
+            game.Guess(arrayGuess);
+            
+            if (game.Status != GameStatus.Ongoing) {
                 if (userName != "") {
                     Player player = new PlayerList().GetPlayer(userName);
-                player.Add(game.Difficulity, game.GuessCount, game.Status);
-                player.Save();
+                    player.Add(game.Difficulity, game.GuessCount, game.Status);
+                    player.Save();
                 } 
-                Reset();
+                // play a new game at the same difficuillity
+                // Reset(game.Difficulity);
             }
-            int[] arrayGuess = Array.ConvertAll(guess.Split(','), int.Parse);
-            Peg peg = game.Guess(arrayGuess);
-            return Ok(MakeBord());
+            return MakeBord();
         }
 
-        private void Reset() {
-            game = new MasterMind();
+        private void Reset(GameDifficulity difficulity) {
+            game = new MasterMind(difficulity);
         }
 
-        private Object MakeBord() {
+        private ActionResult MakeBord() {
             int[][] bord = new int[game.RowCount][];
             int[][] pegs = new int[game.RowCount][];
 
@@ -87,7 +92,7 @@ namespace MasterMind.Controllers {
                 pegs = pegs,
                 game_status = game.Status.ToString()
             };
-            return json;
+            return Ok(json);
         }
     }
 }

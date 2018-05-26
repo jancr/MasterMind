@@ -20,7 +20,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace MasterMind.MMStartup {
     public class Startup {
-
         public void ConfigureServices(IServiceCollection services) {
             services.AddMvc().AddJsonOptions(options => {
                     options.SerializerSettings.ContractResolver = 

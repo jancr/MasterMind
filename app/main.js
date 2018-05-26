@@ -61,11 +61,14 @@ var apiProcess = null;
 function startApi() {
 	var proc = require('child_process').spawn;
 	//  run server
-	var mm_bin_path = path.join(__dirname, '..\\src\\bin\\dist\\win\\MasterMind.exe');
-	if (os.platform() === 'darwin') {
-		mm_bin_path = path.join(__dirname, '..//src//bin//dist//osx//MasterMind');
-	} 
-	// TODO: linux
+    var platform = os.platform()
+    if (platform == 'win32') {
+        var mm_bin_path = path.join(__dirname, 'backebnd\\windows\\MasterMind.exe');
+    } else if (platform == 'darwin') {
+		var mm_bin_path = path.join(__dirname, 'backend/macos/MasterMind');
+	} else if (platform == 'linux') { 
+		var mm_bin_path = path.join(__dirname, 'backend/linux/MasterMind');
+    }
 	apiProcess = proc(mm_bin_path);
 
 	apiProcess.stdout.on('data', (data) => {

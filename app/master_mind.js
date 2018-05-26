@@ -19,6 +19,7 @@ function MasterMindBord() {
     this.n_colors = 6;
     this.padding = 10
 }
+
     
 // pseudo constructor
 MasterMindBord.prototype.newGame = function(n_rows, n_cols) {
@@ -27,11 +28,15 @@ MasterMindBord.prototype.newGame = function(n_rows, n_cols) {
     } if (typeof(n_cols) !== 'undefined') {
         this.n_cols = n_cols;
     }
+    // reset
     this.n_guesses = 0;
     this.guess_vector = [-1, -1, -1, -1];
-    
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    $.getJSON("http://localhost:5000/api/mm/new-game", 
+    
+    let diff_names = ["Easy", "Medium", "Hard"]
+    let diff_index = $("#difficulty-select")[0].selectedIndex;
+    this.n_colors = 4 + 2 * diff_index
+    $.getJSON("http://localhost:5000/api/mm/new-game/" + diff_names[diff_index], 
               $.proxy(this.update, this));
 }
 
@@ -44,19 +49,20 @@ MasterMindBord.prototype.update = function(response) {
 }
 
 MasterMindBord.prototype.guess = function() {
-    if (this.guess_vector.indexOf(-1) != -1) {
-        $.getJSON("http://localhost:5000/api/mm/guess/" + this.guess_vector.join(), 
-                $.proxy(this.update, this));
+    if (!this.guess_vector.includes(-1)) {
+        let url = "http://localhost:5000/api/mm/guess/";
+        url += this.guess_vector.join() + '/' + $("#user-name")
+        $.getJSON(url, $.proxy(this.update, this));
         this.guess_vector = [-1, -1, -1, -1];
         this.n_guesses++;
-    }
+    } 
 }
 
 // private helper methods
 MasterMindBord.prototype._drawBord = function drawBoard(){
     //grid width and height
-    let bord_width = 500;
-    let bord_height = 1000;
+    let bord_width = 400;
+    let bord_height = 800;
     //padding around grid
     let padding = this.padding
     //size of canvas
@@ -194,7 +200,7 @@ var clickKey = function(event) {
 canvas.addEventListener('click', clickCanvas, false);
 document.addEventListener('keydown', clickKey, false);
 $("#guess-btn").click(function() { masterMindBord.guess(); });
-$("#new_game-btn").click(function() { masterMindBord.newGame(); });
+$("#new-game-btn").click(function() { masterMindBord.newGame(); });
 
 
 $(document).ready(function() {
