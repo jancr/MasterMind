@@ -55,15 +55,16 @@ namespace MasterMind.Controllers {
             int[] arrayGuess = Array.ConvertAll(guess.Split(','), int.Parse);
             game.Guess(arrayGuess);
             
-            if (game.Status != GameStatus.Ongoing) {
-                if (userName != "") {
-                    Player player = new PlayerList().GetPlayer(userName);
-                    player.Add(game.Difficulity, game.GuessCount, game.Status);
-                    player.Save();
-                } 
-                // play a new game at the same difficuillity
-                // Reset(game.Difficulity);
-            }
+            // this code does now work when run from electron
+            // because I do not nessesarily have read/write rights :S
+            // so it has been commented out
+            // if (game.Status != GameStatus.Ongoing) {
+                // if (userName != "") {
+                    // Player player = new PlayerList().GetPlayer(userName);
+                    // player.Add(game.Difficulity, game.GuessCount, game.Status);
+                    // player.Save();
+                // } 
+            // }
             return MakeBord();
         }
 

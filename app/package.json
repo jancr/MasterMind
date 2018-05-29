@@ -13,14 +13,23 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "jquery": "^3.2.1",
-    "popper.js": "^1.12.9"
+    "popper.js": "^1.12.9",
+    "electron-is-dev": "^0.3.0"
   },
   "scripts": {
     "postinstall": "install-app-deps",
     "start": "electron .",
-    "dist": "build"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
-  "build": {
+   "extraResources": {
+     "from": "../src/user_data",
+     "to": "app/user_data",
+     "filter": [
+       "**/*"
+     ]
+    }, 
+	"build": {
     "appId": "master-mind",
     "directories": {
       "buildResources": "../../assets",

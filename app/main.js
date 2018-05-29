@@ -10,6 +10,8 @@ const url = require('url')
 let mainWindow;
 let backendStarted = false;
 
+const isDev = require('electron-is-dev');
+
 function createWindow () {
 	mainWindow = new BrowserWindow({width: 1100, height: 550});
 
@@ -19,8 +21,9 @@ function createWindow () {
 		slashes: true
 	}));
 
-	// TODO uncomment
-	mainWindow.webContents.openDevTools();
+    if (isDev) {
+        mainWindow.webContents.openDevTools();
+    }
 
 	mainWindow.on('closed', function () {
 		mainWindow = null
@@ -28,7 +31,6 @@ function createWindow () {
 }
 
 
-// TODO: remember to uncomment!!!!
 app.on('ready', startApi);
 
 // Quit when all windows are closed.

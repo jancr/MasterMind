@@ -51,7 +51,11 @@ MasterMindBord.prototype.update = function(response) {
 MasterMindBord.prototype.guess = function() {
     if (!this.guess_vector.includes(-1)) {
         let url = "http://localhost:5000/api/mm/guess/";
-        url += this.guess_vector.join() + '/' + $("#user-name")
+        let name = $("#user-name").val();
+        if (name === "") {
+            name = "anonymous"
+        }
+        url += this.guess_vector.join() + '/' + name
         $.getJSON(url, $.proxy(this.update, this));
         this.guess_vector = [-1, -1, -1, -1];
         this.n_guesses++;

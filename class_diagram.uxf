@@ -220,7 +220,7 @@ _-game: MasterMind_
 +Guess(guess:string):ActionResult
 +HighScore(difficulity:GameDifficulity, topX:int): ActionResult
 -Reset()
--MakeBord():Object 
+-MakeBord():ActionResult
 </panel_attributes>
     <additional_attributes/>
   </element>
